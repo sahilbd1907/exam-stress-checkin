@@ -1,16 +1,9 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from app.db.connection import journal_collection
 
 router = APIRouter()
 
-class JournalInput(BaseModel):
-    text: str
-
-@router.post("/")
-async def analyze_journal(input: JournalInput):
-    # Placeholder for emotion classification + LIME + GPT response
-    return {
-        "emotion": "stressed",
-        "explanation": ["exam", "pressure", "overwhelmed"],
-        "advice": "Take a short break, try some deep breathing."
-    }
+@router.get("/")
+async def test_mongo_connection():
+    count = await journal_collection.count_documents({})
+    return {"message": "Mongo connected", "document_count": count}
